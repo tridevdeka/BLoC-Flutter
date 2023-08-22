@@ -2,6 +2,8 @@ part of 'home_bloc.dart';
 
 abstract class HomeEvent {}
 
+class HomeInitialEvent extends HomeEvent {}
+
 class HomeProductWishlistButtonClickedEvent extends HomeEvent {}
 
 class HomeProductCartButtonClickedEvent extends HomeEvent {}

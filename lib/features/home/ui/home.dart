@@ -15,6 +15,12 @@ class _HomeState extends State<Home> {
   final HomeBloc homeBloc = HomeBloc();
 
   @override
+  void initState() {
+    homeBloc.add(HomeInitialEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
       bloc: homeBloc,
@@ -32,23 +38,41 @@ class _HomeState extends State<Home> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Grocery App'),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    homeBloc.add(HomeWishlistButtonNavigateEvent());
-                  },
-                  icon: Icon(Icons.favorite)),
-              IconButton(
-                  onPressed: () {
-                    homeBloc.add(HomeCartButtonNavigateEvent());
-                  },
-                  icon: Icon(Icons.shopping_bag))
-            ],
-          ),
-        );
+        switch (state.runtimeType) {
+          case HomeLoadingState:
+            return Scaffold(
+                body: Center(
+              child: CircularProgressIndicator(),
+            ));
+          case HomeLoadedSuccessState:
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Grocery App'),
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        homeBloc.add(HomeWishlistButtonNavigateEvent());
+                      },
+                      icon: Icon(Icons.favorite)),
+                  IconButton(
+                      onPressed: () {
+                        homeBloc.add(HomeCartButtonNavigateEvent());
+                      },
+                      icon: Icon(Icons.shopping_bag))
+                ],
+              ),
+            );
+
+          case HomeErrorState:
+            return Scaffold(
+              body: Center(
+                child: Text('Error'),
+              ),
+            );
+
+          default:
+            return SizedBox();
+        }
       },
     );
   }
